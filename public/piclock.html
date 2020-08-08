@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <title>PiClock</title>
+  <meta http-equiv="content-type">
+  <meta content="text/html">
+  <meta charset="UTF-8">
+  <meta name="description" content="Just a clock; Author: Vladimir Mandic <mandic00@live.com>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.1, maximum-scale=4.0, shrink-to-fit=yes, user-scalable=yes">
+  <meta name="theme-color" content="black"/>
+  <meta name="application-name" content="PiClock">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" sizes="256x256" href="/favicon.png">
+  <link rel="apple-touch-icon" sizes="256x256" href="/favicon.png">
+  <link rel="apple-touch-startup-image" href="/favicon.png">
+  <script defer type="text/javascript" src="/suncalc.js"></script>
+  <script defer type="text/javascript" src="/moment.js"></script>
+  <script defer type="text/javascript" src="/datetime.js"></script>
+  <script defer type="text/javascript" src="/lookup.js"></script>
+  <style>
+    @font-face { font-family: 'Lato'; font-display: swap; font-style: normal; font-weight: 400; src: local('Lato'), url('/lato.ttf') format('truetype'); }
+    html { font-size: calc(100vw / 30); font-family: "Lato", "Segoe UI", "Roboto", sans-serif; font-variant: small-caps; }
+    body { width: 100vw; height: 100vh; background: black; --size: 150px; overflow: hidden; color: white; }
+    table { width: 100%; margin: 0px; padding: 0px; border-collapse: collapse; text-align: left; }
+    .general { justify-content:center; font-size: 0.5rem; display: flex; line-height-step: 0.5rem; }
+    .astronomy { padding: 1.0rem; }
+    .date { margin-top: 0.4rem; font-size: 1.4rem; text-align: center; }
+    .clock { height: 6.0rem ; color: white; font-size: 4.0rem; line-height: 6.0rem; display: flex; position: relative; overflow: hidden; min-width: fit-content; justify-content: center; }
+    .clock::before { content: ''; width: 100vw; height: 2.0rem; background: linear-gradient(to bottom, transparent, black); position: absolute; top: 4.0rem; z-index: 2; }
+    .clock::after { content: ''; width: 100vw; height: 2.0rem; background: linear-gradient(to top, transparent, black); position: absolute; z-index: 2; }
+    .clock > div { display: flex; }
+    .move { animation: move linear 950ms; }
+    @keyframes move { from { transform: translateY(0vh) } to { transform: translateY(calc(-1 * 7.0rem)) } }
+  </style>
+  <body>
+    <noscript><h1>PiClock</h1><br><h2>Error: JavaScript is disabled</h2></noscript>
+    <div>
+      <div id="div-datetime">
+        <div id="date" class="date"></div>
+        <div id="clock" class="clock">
+          <div id="hours"><div><div>0</div></div><div><div>0</div></div></div>
+          <div class="tick">:</div>
+          <div id="minutes"><div><div>0</div></div><div><div>0</div></div></div>
+          <div class="tick">:</div>
+          <div id="seconds"><div><div>0</div></div><div><div>0</div></div></div>   
+        </div>
+      </div>
+      <div id="div-agent" class="general"></div>
+      <div id="div-ip" class="general"></div>
+      <div id="div-asn" class="general"></div>
+      <div id="div-geoip" class="general"></div>
+      <div id="div-gps" class="general"></div>
+      <div id="div-address" class="general"></div>
+      <div id="div-astronomy" class="general"></div>
+    </div>
+    <script>
+      async function main() {
+        window.dateTime();
+        window.lookup();
+      }
+      window.onload = main;
+    </script>
+  </body>
+</html>

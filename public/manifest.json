@@ -1,0 +1,10 @@
+{
+  "name": "PiClock",
+  "short_name": "PiClock",
+  "icons": [{ "src": "/favicon.png", "sizes": "256x256", "type": "image/png", "purpose": "any maskable" }],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000"
+}

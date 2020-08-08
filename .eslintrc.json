@@ -1,0 +1,22 @@
+{
+  "globals": {},
+  "env": {
+      "browser": true,
+      "commonjs": true,
+      "es6": true,
+      "node": true,
+      "es2020": true
+  },
+  "parserOptions": { "ecmaVersion": 2020 },
+  "plugins": [ "html" ],
+  "extends": [
+      "eslint:recommended",
+      "airbnb-base"
+  ],
+  "rules": {
+    "max-len": [1, 270, 3],
+    "no-param-reassign": "off",
+    "dot-notation": "off",
+    "import/extensions": "off"
+  }
+}

@@ -1,0 +1,17 @@
+[Unit]
+Description=piclock
+After=network.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=/home/vlado/.nvm/versions/node/v14.4.0/bin/node server/piclock.js
+WorkingDirectory=/home/vlado/dev/piclock
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+RestartSec=60
+User=vlado
+StandardOutput=null
+
+[Install]
+WantedBy=multi-user.target

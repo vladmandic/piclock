@@ -1,0 +1,41 @@
+{
+  "name": "piclock",
+  "version": "0.0.1",
+  "description": "just a clock",
+  "main": "piclock.js",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "scripts": {
+    "start": "node server/piclock.js",
+    "test": "eslint *.js public/*.js public/*.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vladmandic/piclock.git"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "clock"
+  ],
+  "author": "Vladimir Mandic <mandic00@live.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vladmandic/pilogger/issues"
+  },
+  "homepage": "https://github.com/vladmandic/piclock#readme",
+  "dependencies": {
+    "@vladmandic/pilogger": "^0.1.6",
+    "maxmind": "^4.1.4",
+    "superagent": "^5.3.1",
+    "useragent": "^2.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.6.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-html": "^6.0.3",
+    "eslint-config-airbnb-base": "^14.2.0"
+  }
+}
