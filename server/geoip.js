@@ -60,7 +60,6 @@ async function get(addr = '127.0.0.1') {
       lon: geo.location.longitude,
       accuracy: geo.location.accuracy_radius,
     };
-    log.data(`IP cached: ${loc.ip} from: ${loc.city}/${loc.country} asn: ${loc.asn}`);
   } catch { /**/ }
   // try lookup of public ip
   if (loc.country === '') {

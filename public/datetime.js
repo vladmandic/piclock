@@ -38,6 +38,8 @@ async function updateDate() {
 }
 
 function dateTime() {
+  // eslint-disable-next-line no-console
+  console.log('Initializing DateTime handler');
   updateTime();
   updateDate();
   setInterval(updateTime, 1000);

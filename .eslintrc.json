@@ -17,6 +17,8 @@
     "max-len": [1, 270, 3],
     "no-param-reassign": "off",
     "dot-notation": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "no-mixed-operators": "off",
+    "prefer-destructuring": "off"
   }
 }

@@ -20,20 +20,20 @@
   <script defer type="text/javascript" src="/lookup.js"></script>
   <style>
     @font-face { font-family: 'Lato'; font-display: swap; font-style: normal; font-weight: 400; src: local('Lato'), url('/lato.ttf') format('truetype'); }
-    html { font-size: calc(100vw / 30); font-family: "Lato", "Segoe UI", "Roboto", sans-serif; font-variant: small-caps; }
+    @keyframes fade { 0% { opacity:0; } 100% { opacity:1; } }
+    @keyframes move { from { transform: translateY(0vh) } to { transform: translateY(calc(-1 * 7.0rem)) } }
+    html { font-size: calc(100vw / 40); font-family: "Lato", "Segoe UI", "Roboto", sans-serif; font-variant: small-caps; }
     body { width: 100vw; height: 100vh; background: black; --size: 150px; overflow: hidden; color: white; }
-    table { width: 100%; margin: 0px; padding: 0px; border-collapse: collapse; text-align: left; }
-    .general { justify-content:center; font-size: 0.5rem; display: flex; line-height-step: 0.5rem; }
-    .astronomy { padding: 1.0rem; }
-    .date { margin-top: 0.4rem; font-size: 1.4rem; text-align: center; }
-    .clock { height: 6.0rem ; color: white; font-size: 4.0rem; line-height: 6.0rem; display: flex; position: relative; overflow: hidden; min-width: fit-content; justify-content: center; }
+    .general { justify-content: center; text-align: center; font-size: 0.6rem; display: flex; line-height-step: 0.5rem; animation: fade ease 5s; }
+    .astronomy { padding: 0.4rem 0.6rem 0 0.6rem; animation: fade ease 7s;}
+    .date { margin-top: 0.4rem; font-size: 1.4rem; font-weight: bolder; text-align: center; animation: fade ease 3s; }
+    .clock { height: 6.0rem ; color: white; font-size: 4.0rem; line-height: 6.0rem; display: flex; position: relative; overflow: hidden; min-width: fit-content; justify-content: center; animation: fade ease 1s; }
     .clock::before { content: ''; width: 100vw; height: 2.0rem; background: linear-gradient(to bottom, transparent, black); position: absolute; top: 4.0rem; z-index: 2; }
     .clock::after { content: ''; width: 100vw; height: 2.0rem; background: linear-gradient(to top, transparent, black); position: absolute; z-index: 2; }
     .clock > div { display: flex; }
     .move { animation: move linear 950ms; }
-    @keyframes move { from { transform: translateY(0vh) } to { transform: translateY(calc(-1 * 7.0rem)) } }
   </style>
-  <body>
+  <body class="body">
     <noscript><h1>PiClock</h1><br><h2>Error: JavaScript is disabled</h2></noscript>
     <div>
       <div id="div-datetime">
@@ -50,16 +50,22 @@
       <div id="div-ip" class="general"></div>
       <div id="div-asn" class="general"></div>
       <div id="div-geoip" class="general"></div>
+      <div id="div-addressIP" class="general"></div>
       <div id="div-gps" class="general"></div>
-      <div id="div-address" class="general"></div>
+      <div id="div-addressGPS" class="general"></div>
       <div id="div-astronomy" class="general"></div>
     </div>
     <script>
-      async function main() {
+      window.onload = () => {
         window.dateTime();
-        window.lookup();
-      }
-      window.onload = main;
+        window.lookupIP();
+        document.addEventListener('click', window.lookupGPS);
+        document.addEventListener('mousemove', (event) => {
+          const percX = Math.round(100 * event.pageX / window.innerWidth);
+          const percY = Math.round(100 * event.pageY / window.innerHeight);
+          document.body.style.background = `radial-gradient(at ${percX}% ${percY}%, #222222 0, black 50%, black 100%)`;
+        });
+      };
     </script>
   </body>
 </html>

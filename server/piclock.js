@@ -3,7 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 const zlib = require('zlib');
-const useragent = require('useragent');
 const superagent = require('superagent');
 const log = require('@vladmandic/pilogger');
 const geoip = require('./geoip.js');
@@ -51,8 +50,11 @@ async function geoDecode(lat, lon) {
 
 async function api(req, res) {
   let data = {};
-  if (req.url.startsWith('/api/geoip')) data = await geoip.get(req.socket.remoteAddress);
-  data.agent = useragent.lookup(req.headers['user-agent']);
+  const ip = req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
+  if (req.url.startsWith('/api/geoip')) data = await geoip.get(ip);
+  const agent = (req.headers['user-agent'] || '').replace('(KHTML, like Gecko)', '').replace('Mozilla/5.0', '').replace('/  /g', ' ');
+  data.device = agent.match(/\((.*)\)/)[1];
+  data.agent = agent.replace(/\(.*\)/, '');
   data.address = await geoDecode(req.headers.lat || data.lat, req.headers.lon || data.lon);
   // if (data.address?.intersection) delete data.address.intersection;
   const json = JSON.stringify(data);
@@ -86,7 +88,8 @@ async function request(req, res) {
     });
     res.end(data); // , options.brotli ? 'binary' : 'utf-8');
   }
-  log.data(`${req.method}/${req.httpVersion}`, res.statusCode, contentType, stat.size, data.length, `${req.headers['host']}${req.url}`, req.socket.remoteAddress, req.headers['user-agent']);
+  const ip = req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
+  log.data(`${req.method}/${req.httpVersion}`, res.statusCode, contentType, stat.size, data.length, `${req.headers['host']}${req.url}`, ip);
   res.end();
 }
 
