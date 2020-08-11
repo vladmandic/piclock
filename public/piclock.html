@@ -21,7 +21,7 @@
   <style>
     @font-face { font-family: 'Lato'; font-display: swap; font-style: normal; font-weight: 400; src: local('Lato'), url('/lato.ttf') format('truetype'); }
     @keyframes fade { 0% { opacity:0; } 100% { opacity:1; } }
-    @keyframes move { from { transform: translateY(0vh) } to { transform: translateY(calc(-1 * 7.0rem)) } }
+    @keyframes scroll { from { transform: translateY(0vh) } to { transform: translateY(calc(-1 * 7.0rem)) } }
     html { font-size: calc(100vw / 40); font-family: "Lato", "Segoe UI", "Roboto", sans-serif; font-variant: small-caps; }
     body { width: 100vw; height: 100vh; background: black; --size: 150px; overflow: hidden; color: white; }
     .general { justify-content: center; text-align: center; font-size: 0.6rem; display: flex; line-height-step: 0.5rem; animation: fade ease 5s; }
@@ -31,7 +31,7 @@
     .clock::before { content: ''; width: 100vw; height: 2.0rem; background: linear-gradient(to bottom, transparent, black); position: absolute; top: 4.0rem; z-index: 2; }
     .clock::after { content: ''; width: 100vw; height: 2.0rem; background: linear-gradient(to top, transparent, black); position: absolute; z-index: 2; }
     .clock > div { display: flex; }
-    .move { animation: move linear 950ms; }
+    .clock-move { animation: scroll linear 950ms; }
   </style>
   <body class="body">
     <noscript><h1>PiClock</h1><br><h2>Error: JavaScript is disabled</h2></noscript>
@@ -40,34 +40,23 @@
         <div id="date" class="date"></div>
         <div id="clock" class="clock">
           <div id="hours"><div><div>0</div></div><div><div>0</div></div></div>
-          <div class="tick">:</div>
+          <span>:</span>
           <div id="minutes"><div><div>0</div></div><div><div>0</div></div></div>
-          <div class="tick">:</div>
+          <span>:</span>
           <div id="seconds"><div><div>0</div></div><div><div>0</div></div></div>   
         </div>
       </div>
-      <div id="div-agent" class="general"></div>
-      <div id="div-connection" class="general"></div>
-      <div id="div-ip" class="general"></div>
-      <div id="div-asn" class="general"></div>
-      <div id="div-geoip" class="general"></div>
-      <div id="div-addressIP" class="general"></div>
-      <div id="div-gps" class="general"></div>
-      <div id="div-addressGPS" class="general"></div>
+      <div id="div-lookup">
+        <div id="div-agent" class="general"></div>
+        <div id="div-connection" class="general"></div>
+        <div id="div-ip" class="general"></div>
+        <div id="div-asn" class="general"></div>
+        <div id="div-geoip" class="general"></div>
+        <div id="div-addressIP" class="general"></div>
+        <div id="div-gps" class="general"></div>
+        <div id="div-addressGPS" class="general"></div>
+      </div>
       <div id="div-astronomy" class="general"></div>
     </div>
-    <script>
-      window.onload = () => {
-        window.dateTime();
-        window.lookupIP();
-        window.connection();
-        document.addEventListener('click', window.lookupGPS);
-        document.addEventListener('mousemove', (event) => {
-          const percX = Math.round(100 * event.pageX / window.innerWidth);
-          const percY = Math.round(100 * event.pageY / window.innerHeight);
-          document.body.style.background = `radial-gradient(at ${percX}% ${percY}%, #222222 0, black 50%, black 100%)`;
-        });
-      };
-    </script>
   </body>
 </html>

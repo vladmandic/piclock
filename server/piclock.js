@@ -2,7 +2,6 @@ const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const http = require('http');
-const zlib = require('zlib');
 const superagent = require('superagent');
 const log = require('@vladmandic/pilogger');
 const geoip = require('./geoip.js');
@@ -14,7 +13,6 @@ const options = {
   log: './piclock.log',
   port: 10020,
   cache: 60 * 60 * 24 * 30 * 365, // 1 year
-  brotli: false,
   bingKey: secrets.bingKey,
 };
 const mime = {
@@ -80,8 +78,7 @@ async function request(req, res) {
     res.end('Error 404: Not Found\n', 'utf-8');
   } else {
     stat = fs.statSync(file);
-    const content = fs.readFileSync(file);
-    data = options.brotli ? zlib.brotliCompressSync(content) : content;
+    data = fs.readFileSync(file);
     const cache = contentType.startsWith('text/') ? 'no-cache' : `max-age=${options.cache}`;
     res.writeHead(200, {
       'Content-Language': 'en', 'Content-Type': contentType, 'Content-Encoding': (options.brotli ? 'br' : ''), 'Content-Length': data.length, 'Last-Modified': stat.mtime, 'Cache-Control': cache, 'X-Powered-By': `NodeJS/${process.version}`,
@@ -89,7 +86,7 @@ async function request(req, res) {
     res.end(data); // , options.brotli ? 'binary' : 'utf-8');
   }
   const ip = req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
-  log.data(`${req.method}/${req.httpVersion}`, res.statusCode, contentType, stat.size, data.length, `${req.headers['host']}${req.url}`, ip);
+  log.data(`${req.method}/${req.httpVersion}`, res.statusCode, contentType, data.length || stat.size, `${req.headers['host']}${req.url}`, ip);
   res.end();
 }
 

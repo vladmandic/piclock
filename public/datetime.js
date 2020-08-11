@@ -5,10 +5,10 @@ let last = new Date(0);
 function updateNumber(element, number) {
   const second = element.lastElementChild.cloneNode(true);
   second.textContent = number;
-  element.classList.add('move');
+  element.classList.add('clock-move');
   element.appendChild(second);
   setTimeout(() => {
-    element.classList.remove('move');
+    element.classList.remove('clock-move');
     element.removeChild(element.firstElementChild);
   }, 750);
 }
@@ -39,11 +39,11 @@ async function updateDate() {
 
 function dateTime() {
   // eslint-disable-next-line no-console
-  console.log('Initializing DateTime handler');
+  console.log('initDateTime', new Date());
   updateTime();
   updateDate();
   setInterval(updateTime, 1000);
   setTimeout(updateDate, 5 * 60 * 1000);
 }
 
-window.dateTime = dateTime;
+window.addEventListener('load', () => dateTime());
