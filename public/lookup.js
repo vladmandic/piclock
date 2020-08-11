@@ -62,8 +62,9 @@ async function lookupGPS() {
 }
 
 async function connection() {
-  if (!navigator || !navigator.connection) return;
-  document.getElementById('div-connection').innerHTML = `Connection: ${navigator.connection.type} | Speed: ${navigator.connection.downlink} Mbps`;
+  const conn = navigator ? (navigator.connection || navigator.mozConnection || navigator.webkitConnection || {}) : null;
+  if (!conn) return;
+  document.getElementById('div-connection').innerHTML = `Connection: ${conn.type} | Speed: ${conn.downlink} Mbps`;
 }
 
 window.lookupIP = lookupIP;
