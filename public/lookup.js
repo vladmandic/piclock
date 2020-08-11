@@ -35,8 +35,7 @@ async function locateGPS() {
 async function lookupIP() {
   // eslint-disable-next-line no-console
   console.log('Initializing IP lookup');
-  const headers = {};
-  const res = await fetch('/api/geoip', { headers });
+  const res = await fetch('/api/geoip');
   const data = await res.json();
   if (data) printAstronomy(data.lat, data.lon);
   if (data.ext) document.getElementById('div-ip').innerHTML = `IP: Reported ${data.ip} &nbsp Actual ${data.ext}`;
@@ -55,12 +54,18 @@ async function lookupGPS() {
   document.getElementById('div-gps').innerHTML = `
     GPS: Lat ${Math.round(1000 * gps.latitude) / 1000}° &nbsp Lon ${Math.round(1000 * gps.longitude) / 1000}° &nbsp ~${Math.round(gps.accuracy)}m &nbsp | &nbsp Speed: ${Math.round(gps.speed || 0)}m/s &nbsp | &nbsp Heading: ${Math.round(gps.heading || 0)}°
   `;
-  const headers = { lat: gps.latitude || 0, lon: gps.longitude || 0 };
+  const headers = { lat: gps.latitude || 0, lon: gps.longitude };
   const res = await fetch('/api/geoip', { headers });
   const data = await res.json();
   if (data) printAstronomy(data.lat, data.lon);
   if (data.address) document.getElementById('div-addressGPS').innerHTML = `GPS Address: ${data.address.formattedAddress}<br>Area: ${data.address.locality}`;
 }
 
+async function connection() {
+  if (!navigator || !navigator.connection) return;
+  document.getElementById('div-connection').innerHTML = `Connection: ${navigator.connection.type} | Speed: ${navigator.connection.downlink} Mbps`;
+}
+
 window.lookupIP = lookupIP;
 window.lookupGPS = lookupGPS;
+window.connection = connection;

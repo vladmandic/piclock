@@ -47,6 +47,7 @@
         </div>
       </div>
       <div id="div-agent" class="general"></div>
+      <div id="div-connection" class="general"></div>
       <div id="div-ip" class="general"></div>
       <div id="div-asn" class="general"></div>
       <div id="div-geoip" class="general"></div>
@@ -59,6 +60,7 @@
       window.onload = () => {
         window.dateTime();
         window.lookupIP();
+        window.connection();
         document.addEventListener('click', window.lookupGPS);
         document.addEventListener('mousemove', (event) => {
           const percX = Math.round(100 * event.pageX / window.innerWidth);

@@ -40,7 +40,7 @@ async function geoDecode(lat, lon) {
   try {
     const res = await superagent.get(`https://dev.virtualearth.net/REST/v1/Locations/${lat},${lon}?key=${options.bingKey}`);
     const json = JSON.parse(res.text);
-    const addr = json.resourceSets[0].resources[0].address;
+    const addr = (json && json.resourceSets && json.resourceSets[0].resources) ? json.resourceSets[0].resources[0].address : null;
     return addr;
   } catch (err) {
     log.warn(`Maps geodecode: ${err}`);
@@ -50,7 +50,7 @@ async function geoDecode(lat, lon) {
 
 async function api(req, res) {
   let data = {};
-  const ip = req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
+  const ip = (req.headers['forwarded'] || '').match(/for="\[(.*)\]:/)[1] || req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
   if (req.url.startsWith('/api/geoip')) data = await geoip.get(ip);
   const agent = (req.headers['user-agent'] || '').replace('(KHTML, like Gecko)', '').replace('Mozilla/5.0', '').replace('/  /g', ' ');
   data.device = agent.match(/\((.*)\)/)[1];

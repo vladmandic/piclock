@@ -19,6 +19,7 @@
     "dot-notation": "off",
     "import/extensions": "off",
     "no-mixed-operators": "off",
-    "prefer-destructuring": "off"
+    "prefer-destructuring": "off",
+    "object-curly-newline": "off"
   }
 }
