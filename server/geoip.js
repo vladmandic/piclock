@@ -53,12 +53,12 @@ async function get(addr = '127.0.0.1') {
     loc = {
       ip,
       ext: ip,
-      country: geo.country?.iso_code,
-      city: geo.city ? geo.city?.names?.en : '',
+      country: geo.country.iso_code,
+      city: geo.city ? geo.city.names?.en : '',
       asn: asn ? asn.autonomous_system_organization : 'unknown',
-      lat: geo.location ? geo.location?.latitude : null,
-      lon: geo.location ? geo.location?.longitude : null,
-      accuracy: geo.location ? geo.location?.accuracy_radius : 0,
+      lat: geo.location ? geo.location.latitude : null,
+      lon: geo.location ? geo.location.longitude : null,
+      accuracy: geo.location ? geo.location.accuracy_radius : 0,
     };
   } catch { /**/ }
   // try lookup of public ip
@@ -71,12 +71,12 @@ async function get(addr = '127.0.0.1') {
       loc = {
         ip,
         ext,
-        country: geo.country?.iso_code,
-        city: geo.city ? geo.city?.names?.en : '',
+        country: geo.country.iso_code,
+        city: geo.city ? geo.city.names.en : '',
         asn: asn ? asn.autonomous_system_organization : 'unknown',
-        lat: geo.location ? geo.location?.latitude : null,
-        lon: geo.location ? geo.location?.longitude : null,
-        accuracy: geo.location ? geo.location?.accuracy_radius : 0,
+        lat: geo.location ? geo.location.latitude : null,
+        lon: geo.location ? geo.location.longitude : null,
+        accuracy: geo.location ? geo.location.accuracy_radius : 0,
       };
     } catch (err) {
       log.warn(`GeoIP lookup failed for ${ip}: ${err}`);

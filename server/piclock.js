@@ -47,11 +47,11 @@ async function geoDecode(lat, lon) {
 }
 
 async function api(req, res) {
-  let data = {};
   const ip = (req.headers['forwarded'] || '').match(/for="\[(.*)\]:/)[1] || req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
-  if (req.url.startsWith('/api/geoip')) data = await geoip.get(ip);
+  const data = await geoip.get(ip);
   const agent = (req.headers['user-agent'] || '').replace('(KHTML, like Gecko)', '').replace('Mozilla/5.0', '').replace('/  /g', ' ');
-  data.device = agent.match(/\((.*)\)/)[1];
+  const device = agent.match(/\((.*)\)/);
+  data.device = device && device.length > 0 ? device[1] : 'unknown';
   data.agent = agent.replace(/\(.*\)/, '');
   data.address = await geoDecode(req.headers.lat || data.lat, req.headers.lon || data.lon);
   // if (data.address?.intersection) delete data.address.intersection;
@@ -59,12 +59,13 @@ async function api(req, res) {
   res.writeHead(200, {
     'Content-Type': 'application/json', 'Content-Length': json.length, 'Cache-Control': 'no-cache', 'X-Powered-By': `NodeJS/${process.version}`,
   });
-  log.data(`API ${req.url}`, json.length, json);
+  const precise = (req.headers.lat !== undefined) && (req.headers.lon !== undefined);
+  log.data(`API ${req.url}`, precise, json.length, json);
   res.end(json, 'utf-8');
 }
 
 async function request(req, res) {
-  if (req.url.startsWith('/api/')) {
+  if (req.url.startsWith('/api/geoip')) {
     api(req, res);
     return;
   }
@@ -85,7 +86,7 @@ async function request(req, res) {
     });
     res.end(data); // , options.brotli ? 'binary' : 'utf-8');
   }
-  const ip = req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
+  const ip = (req.headers['forwarded'] || '').match(/for="\[(.*)\]:/)[1] || req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
   log.data(`${req.method}/${req.httpVersion}`, res.statusCode, contentType, data.length || stat.size, `${req.headers['host']}${req.url}`, ip);
   res.end();
 }

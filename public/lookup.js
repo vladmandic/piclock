@@ -4,9 +4,10 @@ async function printAstronomy(lat, lon) {
   // eslint-disable-next-line no-console
   console.log('InitAstronomy', lat, lon);
   const div = document.getElementById('div-astronomy');
-  const sun = SunCalc.getTimes(new Date(), lat, lon);
-  const moon = SunCalc.getMoonTimes(new Date(), lat, lon);
-  const pos = SunCalc.getMoonIllumination(new Date());
+  const dt = new Date();
+  const sun = SunCalc.getTimes(dt, lat || 0, lon || 0);
+  const moon = SunCalc.getMoonTimes(dt, lat || 0, lon || 0);
+  const pos = SunCalc.getMoonIllumination(dt);
   const phase = `<span style="display:inline-block;transform:rotate(${(pos.phase <= 0.5) ? 0 : 180}deg);"> ↑ </span>`;
   const time = (date) => moment(date).format('HH:mm');
   div.innerHTML = `
@@ -34,12 +35,16 @@ async function lookupIP() {
   const res = await fetch('/api/geoip');
   const data = await res.json();
   // eslint-disable-next-line no-console
-  console.log('LookupIP', data);
-  if (data) printAstronomy(data.lat, data.lon);
-  if (data.ext) document.getElementById('div-ip').innerHTML = `IP: Reported ${data.ip} &nbsp Actual ${data.ext}`;
-  if (data.country) document.getElementById('div-geoip').innerHTML = `GeoIP: ${data.country}/${data.city} &nbsp | &nbsp Lat ${Math.round(100 * data.lat) / 100}° Lon ${Math.round(100 * data.lon) / 100}° ~${Math.round(data.accuracy)}km`;
-  if (data.asn) document.getElementById('div-asn').innerHTML = `ASN: ${data.asn || 'unknown provider'}`;
-  if (data.agent) document.getElementById('div-agent').innerHTML = `Agent: ${data.agent}<br>Device: ${data.device}`;
+  console.log('LookupIP', res.status, data || 'no data received');
+  if (!data) {
+    document.getElementById('div-error').innerHTML = `Error: No data received | code: ${res.status}`;
+    return;
+  }
+  printAstronomy(data.lat, data.lon);
+  document.getElementById('div-ip').innerHTML = `IP: Reported ${data.ip} &nbsp Actual ${data.ext}`;
+  document.getElementById('div-geoip').innerHTML = `GeoIP: ${data.country}/${data.city} &nbsp | &nbsp Lat ${Math.round(100 * data.lat) / 100}° Lon ${Math.round(100 * data.lon) / 100}° ~${Math.round(data.accuracy)}km`;
+  document.getElementById('div-asn').innerHTML = `ASN: ${data.asn || 'unknown provider'}`;
+  document.getElementById('div-agent').innerHTML = `Agent: ${data.agent}<br>Device: ${data.device}`;
   if (data.address) document.getElementById('div-addressIP').innerHTML = `IP Address: ${data.address.formattedAddress || 'unknown'}<br>Area: ${data.address.locality || 'unknown'}`;
 }
 
