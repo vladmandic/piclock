@@ -44,8 +44,8 @@ async function lookupIP() {
   document.getElementById('div-ip').innerHTML = `IP: Reported ${data.ip} &nbsp Actual ${data.ext}`;
   document.getElementById('div-geoip').innerHTML = `GeoIP: ${data.country}/${data.city} &nbsp | &nbsp Lat ${Math.round(100 * data.lat) / 100}° Lon ${Math.round(100 * data.lon) / 100}° ~${Math.round(data.accuracy)}km`;
   document.getElementById('div-asn').innerHTML = `ASN: ${data.asn || 'unknown provider'}`;
-  document.getElementById('div-agent').innerHTML = `Agent: ${data.agent}<br>Device: ${data.device}`;
-  if (data.address) document.getElementById('div-addressIP').innerHTML = `IP Address: ${data.address.formattedAddress || 'unknown'}<br>Area: ${data.address.locality || 'unknown'}`;
+  document.getElementById('div-agent').innerHTML = `Agent: ${data.agent} &nbsp | &nbsp Device: ${data.device}`;
+  if (data.address) document.getElementById('div-addressIP').innerHTML = `IP Address: ${data.address.formattedAddress || 'unknown'} &nbsp | &nbsp Area: ${data.address.locality || 'unknown'}`;
 }
 
 async function lookupGPS() {
