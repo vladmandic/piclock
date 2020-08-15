@@ -1,1 +1,186 @@
-!function(){"use strict";var n=Math.PI,t=Math.sin,e=Math.cos,r=Math.tan,a=Math.asin,u=Math.atan2,o=Math.acos,i=n/180;function c(n){return new Date(864e5*(n+.5-2440588))}function d(n){return function(n){return n.valueOf()/864e5-.5+2440588}(n)-2451545}var s=23.4397*i;function f(n,a){return u(t(n)*e(s)-r(a)*t(s),e(n))}function l(n,r){return a(t(r)*e(s)+e(r)*t(s)*t(n))}function h(n,a,o){return u(t(n),e(n)*t(a)-r(o)*e(a))}function M(n,r,u){return a(t(r)*t(u)+e(r)*e(u)*e(n))}function g(n,t){return i*(280.16+360.9856235*n)-t}function v(n){return i*(357.5291+.98560028*n)}function w(e){return e+i*(1.9148*t(e)+.02*t(2*e)+3e-4*t(3*e))+102.9372*i+n}function m(n){var t=w(v(n));return{dec:l(t,0),ra:f(t,0)}}var p={getPosition:function(n,t,e){var r=i*-e,a=i*t,u=d(n),o=m(u),c=g(u,r)-o.ra;return{azimuth:h(c,a,o.dec),altitude:M(c,a,o.dec)}}},D=p.times=[[-.833,"sunrise","sunset"],[-.3,"sunriseEnd","sunsetStart"],[-6,"dawn","dusk"],[-12,"nauticalDawn","nauticalDusk"],[-18,"nightEnd","night"],[6,"goldenHourEnd","goldenHour"]];p.addTime=function(n,t,e){D.push([n,t,e])};function P(t,e,r){return 9e-4+(t+e)/(2*n)+r}function y(n,e,r){return 2451545+n+.0053*t(e)-.0069*t(2*r)}function b(n,r,a,u,i,c,d){return y(P(function(n,r,a){return o((t(n)-t(r)*t(a))/(e(r)*e(a)))}(n,a,u),r,i),c,d)}function H(n){var r=i*(134.963+13.064993*n),a=i*(93.272+13.22935*n),u=i*(218.316+13.176396*n)+6.289*i*t(r),o=5.128*i*t(a),c=385001-20905*e(r);return{ra:f(u,o),dec:l(u,o),dist:c}}function T(n,t){return new Date(n.valueOf()+864e5*t/24)}p.getTimes=function(t,e,r){var a,u,o,s,f,h=i*-r,M=i*e,g=function(t,e){return Math.round(t-9e-4-e/(2*n))}(d(t),h),m=P(0,h,g),p=v(m),H=w(p),T=l(H,0),E=y(m,p,H),I={solarNoon:c(E),nadir:c(E-.5)};for(a=0,u=D.length;a<u;a+=1)f=E-((s=b((o=D[a])[0]*i,h,M,T,g,p,H))-E),I[o[1]]=c(f),I[o[2]]=c(s);return I},p.getMoonPosition=function(n,a,o){var c=i*-o,s=i*a,f=d(n),l=H(f),v=g(f,c)-l.ra,w=M(v,s,l.dec),m=u(t(v),r(s)*e(l.dec)-t(l.dec)*e(v));return w+=function(n){return n<0&&(n=0),2967e-7/Math.tan(n+.00312536/(n+.08901179))}(w),{azimuth:h(v,s,l.dec),altitude:w,distance:l.dist,parallacticAngle:m}},p.getMoonIllumination=function(n){var r=d(n||new Date),a=m(r),i=H(r),c=o(t(a.dec)*t(i.dec)+e(a.dec)*e(i.dec)*e(a.ra-i.ra)),s=u(149598e3*t(c),i.dist-149598e3*e(c)),f=u(e(a.dec)*t(a.ra-i.ra),t(a.dec)*e(i.dec)-e(a.dec)*t(i.dec)*e(a.ra-i.ra));return{fraction:(1+e(s))/2,phase:.5+.5*s*(f<0?-1:1)/Math.PI,angle:f}},p.getMoonTimes=function(n,t,e,r){var a=new Date(n);r?a.setUTCHours(0,0,0,0):a.setHours(0,0,0,0);for(var u,o,c,d,s,f,l,h,M,g,v,w,m,D=.133*i,P=p.getMoonPosition(a,t,e).altitude-D,y=1;y<=24&&(u=p.getMoonPosition(T(a,y),t,e).altitude-D,h=((s=(P+(o=p.getMoonPosition(T(a,y+1),t,e).altitude-D))/2-u)*(l=-(f=(o-P)/2)/(2*s))+f)*l+u,g=0,(M=f*f-4*s*u)>=0&&(v=l-(m=Math.sqrt(M)/(2*Math.abs(s))),w=l+m,Math.abs(v)<=1&&g++,Math.abs(w)<=1&&g++,v<-1&&(v=w)),1===g?P<0?c=y+v:d=y+v:2===g&&(c=y+(h<0?w:v),d=y+(h<0?v:w)),!c||!d);y+=2)P=o;var b={};return c&&(b.rise=T(a,c)),d&&(b.set=T(a,d)),c||d||(b[h>0?"alwaysUp":"alwaysDown"]=!0),b},"object"==typeof exports&&"undefined"!=typeof module?module.exports=p:"function"==typeof define&&define.amd?define(p):window.SunCalc=p}();
+/*
+ Based on (c) 2011-2015, Vladimir Agafonkin https://github.com/mourner/suncalc
+*/
+
+// eslint-disable-next-line func-names
+(function () {
+  // shortcuts for easier to read formulas
+  const PI = Math.PI;
+  const sin = Math.sin;
+  const cos = Math.cos;
+  const tan = Math.tan;
+  const asin = Math.asin;
+  const atan = Math.atan2;
+  const acos = Math.acos;
+  const rad = PI / 180;
+  // sun calculations are based on http://aa.quae.nl/en/reken/zonpositie.html formulas
+  // date/time constants and conversions
+  const dayMs = 1000 * 60 * 60 * 24;
+  const J1970 = 2440588;
+  const J2000 = 2451545;
+  function toJulian(date) { return date.valueOf() / dayMs - 0.5 + J1970; }
+  function fromJulian(j) { return new Date((j + 0.5 - J1970) * dayMs); }
+  function toDays(date) { return toJulian(date) - J2000; }
+  // general calculations for position
+  const e = rad * 23.4397; // obliquity of the Earth
+  function rightAscension(l, b) { return atan(sin(l) * cos(e) - tan(b) * sin(e), cos(l)); }
+  function declination(l, b) { return asin(sin(b) * cos(e) + cos(b) * sin(e) * sin(l)); }
+  function azimuth(H, phi, dec) { return atan(sin(H), cos(H) * sin(phi) - tan(dec) * cos(phi)); }
+  function altitude(H, phi, dec) { return asin(sin(phi) * sin(dec) + cos(phi) * cos(dec) * cos(H)); }
+  function siderealTime(d, lw) { return rad * (280.16 + 360.9856235 * d) - lw; }
+  function astroRefraction(h) {
+    if (h < 0) h = 0; // the following formula works for positive altitudes only. if h = -0.08901179 a div/0 would occur.
+    // formula 16.4 of "Astronomical Algorithms" 2nd edition by Jean Meeus (Willmann-Bell, Richmond) 1998.
+    // 1.02 / tan(h + 10.26 / (h + 5.10)) h in degrees, result in arc minutes -> converted to rad:
+    return 0.0002967 / Math.tan(h + 0.00312536 / (h + 0.08901179));
+  }
+  // general sun calculations
+  function solarMeanAnomaly(d) { return rad * (357.5291 + 0.98560028 * d); }
+  function eclipticLongitude(M) {
+    const C = rad * (1.9148 * sin(M) + 0.02 * sin(2 * M) + 0.0003 * sin(3 * M)); // equation of center
+    const P = rad * 102.9372; // perihelion of the Earth
+    return M + C + P + PI;
+  }
+  function sunCoords(d) {
+    const M = solarMeanAnomaly(d);
+    const L = eclipticLongitude(M);
+    return { dec: declination(L, 0), ra: rightAscension(L, 0) };
+  }
+  const SunCalc = {};
+  // calculates sun position for a given date and latitude/longitude
+  SunCalc.getPosition = (date, lat, lng) => {
+    const lw = rad * -lng;
+    const phi = rad * lat;
+    const d = toDays(date);
+    const c = sunCoords(d);
+    const H = siderealTime(d, lw) - c.ra;
+    return { azimuth: azimuth(H, phi, c.dec), altitude: altitude(H, phi, c.dec) };
+  };
+  // sun times configuration (angle, morning name, evening name)
+  SunCalc.times = [[-0.833, 'sunrise', 'sunset'], [-0.3, 'sunriseEnd', 'sunsetStart'], [-6, 'dawn', 'dusk'], [-12, 'nauticalDawn', 'nauticalDusk'], [-18, 'nightEnd', 'night'], [6, 'goldenHourEnd', 'goldenHour']];
+  const times = SunCalc.times;
+  // adds a custom time to the times config
+  SunCalc.addTime = (angle, riseName, setName) => times.push([angle, riseName, setName]);
+  // calculations for sun times
+  const J0 = 0.0009;
+  function julianCycle(d, lw) { return Math.round(d - J0 - lw / (2 * PI)); }
+  function approxTransit(Ht, lw, n) { return J0 + (Ht + lw) / (2 * PI) + n; }
+  function solarTransitJ(ds, M, L) { return J2000 + ds + 0.0053 * sin(M) - 0.0069 * sin(2 * L); }
+  function hourAngle(h, phi, d) { return acos((sin(h) - sin(phi) * sin(d)) / (cos(phi) * cos(d))); }
+  function observerAngle(height) { return -2.076 * Math.sqrt(height) / 60; }
+  // returns set time for the given sun altitude
+  function getSetJ(h, lw, phi, dec, n, M, L) {
+    const w = hourAngle(h, phi, dec);
+    const a = approxTransit(w, lw, n);
+    return solarTransitJ(a, M, L);
+  }
+  // calculates sun times for a given date, latitude/longitude, and, optionally,
+  // the observer height (in meters) relative to the horizon
+  SunCalc.getTimes = (date, lat, lng, height) => {
+    height = height || 0;
+    const lw = rad * -lng;
+    const phi = rad * lat;
+    const dh = observerAngle(height);
+    const d = toDays(date);
+    const n = julianCycle(d, lw);
+    const ds = approxTransit(0, lw, n);
+    const M = solarMeanAnomaly(ds);
+    const L = eclipticLongitude(M);
+    const dec = declination(L, 0);
+    const Jnoon = solarTransitJ(ds, M, L);
+    let i; let len; let time; let h0; let Jset; let Jrise;
+    const result = { solarNoon: fromJulian(Jnoon), nadir: fromJulian(Jnoon - 0.5) };
+    for (i = 0, len = times.length; i < len; i += 1) {
+      time = times[i];
+      h0 = (time[0] + dh) * rad;
+      Jset = getSetJ(h0, lw, phi, dec, n, M, L);
+      Jrise = Jnoon - (Jset - Jnoon);
+      result[time[1]] = fromJulian(Jrise);
+      result[time[2]] = fromJulian(Jset);
+    }
+    return result;
+  };
+  // moon calculations, based on http://aa.quae.nl/en/reken/hemelpositie.html formulas
+  function moonCoords(d) { // geocentric ecliptic coordinates of the moon
+    const L = rad * (218.316 + 13.176396 * d); // ecliptic longitude
+    const M = rad * (134.963 + 13.064993 * d); // mean anomaly
+    const F = rad * (93.272 + 13.229350 * d); // mean distance
+    const l = L + rad * 6.289 * sin(M); // longitude
+    const b = rad * 5.128 * sin(F); // latitude
+    const dt = 385001 - 20905 * cos(M); // distance to the moon in km
+    return { ra: rightAscension(l, b), dec: declination(l, b), dist: dt };
+  }
+  SunCalc.getMoonPosition = (date, lat, lng) => {
+    const lw = rad * -lng;
+    const phi = rad * lat;
+    const d = toDays(date);
+    const c = moonCoords(d);
+    const H = siderealTime(d, lw) - c.ra;
+    let h = altitude(H, phi, c.dec);
+    // formula 14.1 of "Astronomical Algorithms" 2nd edition by Jean Meeus (Willmann-Bell, Richmond) 1998.
+    const pa = atan(sin(H), tan(phi) * cos(c.dec) - sin(c.dec) * cos(H));
+    h += astroRefraction(h); // altitude correction for refraction
+    return { azimuth: azimuth(H, phi, c.dec), altitude: h, distance: c.dist, parallacticAngle: pa };
+  };
+  // calculations for illumination parameters of the moon,
+  // based on http://idlastro.gsfc.nasa.gov/ftp/pro/astro/mphase.pro formulas and
+  // Chapter 48 of "Astronomical Algorithms" 2nd edition by Jean Meeus (Willmann-Bell, Richmond) 1998.
+  SunCalc.getMoonIllumination = (date) => {
+    const d = toDays(date || new Date());
+    const s = sunCoords(d);
+    const m = moonCoords(d);
+    const sdist = 149598000; // distance from Earth to Sun in km
+    const phi = acos(sin(s.dec) * sin(m.dec) + cos(s.dec) * cos(m.dec) * cos(s.ra - m.ra));
+    const inc = atan(sdist * sin(phi), m.dist - sdist * cos(phi));
+    const angle = atan(cos(s.dec) * sin(s.ra - m.ra), sin(s.dec) * cos(m.dec) - cos(s.dec) * sin(m.dec) * cos(s.ra - m.ra));
+    return { fraction: (1 + cos(inc)) / 2, phase: 0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI, angle };
+  };
+  function hoursLater(date, h) {
+    return new Date(date.valueOf() + h * dayMs / 24);
+  }
+  // calculations for moon rise/set times are based on http://www.stargazing.net/kepler/moonrise.html article
+  SunCalc.getMoonTimes = (date, lat, lng, inUTC) => {
+    const t = new Date(date);
+    if (inUTC) t.setUTCHours(0, 0, 0, 0);
+    else t.setHours(0, 0, 0, 0);
+    const hc = 0.133 * rad;
+    let h0 = SunCalc.getMoonPosition(t, lat, lng).altitude - hc;
+    let h1; let h2; let rise; let set; let a; let b; let xe; let ye; let d; let roots; let x1; let x2; let dx;
+    // go in 2-hour chunks, each time seeing if a 3-point quadratic curve crosses zero (which means rise or set)
+    for (let i = 1; i <= 24; i += 2) {
+      h1 = SunCalc.getMoonPosition(hoursLater(t, i), lat, lng).altitude - hc;
+      h2 = SunCalc.getMoonPosition(hoursLater(t, i + 1), lat, lng).altitude - hc;
+      a = (h0 + h2) / 2 - h1;
+      b = (h2 - h0) / 2;
+      xe = -b / (2 * a);
+      ye = (a * xe + b) * xe + h1;
+      d = b * b - 4 * a * h1;
+      roots = 0;
+      if (d >= 0) {
+        dx = Math.sqrt(d) / (Math.abs(a) * 2);
+        x1 = xe - dx;
+        x2 = xe + dx;
+        if (Math.abs(x1) <= 1) roots += 1;
+        if (Math.abs(x2) <= 1) roots += 1;
+        if (x1 < -1) x1 = x2;
+      }
+      if (roots === 1) {
+        if (h0 < 0) rise = i + x1;
+        else set = i + x1;
+      } else if (roots === 2) {
+        rise = i + (ye < 0 ? x2 : x1);
+        set = i + (ye < 0 ? x1 : x2);
+      }
+      if (rise && set) break;
+      h0 = h2;
+    }
+    const result = {};
+    if (rise) result.rise = hoursLater(t, rise);
+    if (set) result.set = hoursLater(t, set);
+    if (!rise && !set) result[ye > 0 ? 'alwaysUp' : 'alwaysDown'] = true;
+    return result;
+  };
+  // export as Node module / AMD module / browser variable
+  if (typeof exports === 'object' && typeof module !== 'undefined') module.exports = SunCalc;
+  else window.SunCalc = SunCalc;
+}());

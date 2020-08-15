@@ -1,4 +1,4 @@
-/* global SunCalc, moment */
+/* global SunCalc */
 
 async function printAstronomy(lat, lon) {
   // eslint-disable-next-line no-console
@@ -9,7 +9,7 @@ async function printAstronomy(lat, lon) {
   const moon = SunCalc.getMoonTimes(dt, lat || 0, lon || 0);
   const pos = SunCalc.getMoonIllumination(dt);
   const phase = `<span style="display:inline-block;transform:rotate(${(pos.phase <= 0.5) ? 0 : 180}deg);"> ↑ </span>`;
-  const time = (date) => moment(date).format('HH:mm');
+  const time = (date) => `${new Date(date).getHours().toString().padStart(2, '0')}:${new Date(date).getMinutes().toString().padStart(2, '0')}`;
   div.innerHTML = `
     <span class="astronomy">Dawn: ${time(sun.dawn)}<br>Sunrise: ${time(sun.sunrise)}<br>Noon: ${time(sun.solarNoon)}</span>
     <span class="astronomy">Golden Hour: ${time(sun.goldenHour)}<br>Sunset: ${time(sun.sunsetStart)}<br>Dusk: ${time(sun.dusk)}<br>Night: ${time(sun.night)}</span>
@@ -76,7 +76,58 @@ async function lookupConn() {
   document.getElementById('div-connection').innerHTML = ((conn.type && conn.type !== 'unknown') ? `Connection: ${conn.type} | ` : '') + (conn.downlink ? `Autodetected speed: ${conn.downlink} Mbps` : '');
 }
 
+let last = new Date(0);
+
+function updateNumber(element, number) {
+  const second = element.lastElementChild.cloneNode(true);
+  second.textContent = number;
+  element.classList.add('clock-move');
+  element.appendChild(second);
+  setTimeout(() => {
+    element.classList.remove('clock-move');
+    element.removeChild(element.firstElementChild);
+  }, 750);
+}
+
+function updateContainer(container, time) {
+  const s = time.toString().padStart(2, '0').split('');
+  const first = container.firstElementChild;
+  if (first.lastElementChild.textContent !== s[0]) updateNumber(first, s[0]);
+  const second = container.lastElementChild;
+  if (second.lastElementChild.textContent !== s[1]) updateNumber(second, s[1]);
+}
+
+function updateTime() {
+  const now = new Date();
+  if (last.getHours() !== now.getHours()) updateContainer(document.getElementById('hours'), now.getHours());
+  if (last.getMinutes() !== now.getMinutes()) updateContainer(document.getElementById('minutes'), now.getMinutes());
+  if (last.getSeconds() !== now.getSeconds()) updateContainer(document.getElementById('seconds'), now.getSeconds());
+  last = now;
+}
+
+async function updateDate() {
+  const dt = new Date();
+  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+  document.getElementById('date').innerHTML = `
+    ${days[dt.getDay()]}, &nbsp
+    ${months[dt.getMonth()]} ${dt.getDate()}
+    ${dt.getFullYear()}
+  `;
+}
+
+function dateTime() {
+  // eslint-disable-next-line no-console
+  console.log('initDateTime', new Date());
+  updateTime();
+  updateDate();
+  setInterval(updateTime, 1000);
+  setTimeout(updateDate, 5 * 60 * 1000);
+}
+
 async function main() {
+  dateTime();
   lookupIP();
   lookupConn();
   document.addEventListener('click', () => {
