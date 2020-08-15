@@ -109,11 +109,13 @@ async function updateDate() {
   const dt = new Date();
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
+  let suffix = '<sup>th</sup>';
+  if (dt.getDate() === 1) suffix = '<sup>st</sup>';
+  else if (dt.getDate() === 2) suffix = '<sup>nd</sup>';
+  else if (dt.getDate() === 3) suffix = '<sup>rd</sup>';
   document.getElementById('date').innerHTML = `
     ${days[dt.getDay()]}, &nbsp
-    ${months[dt.getMonth()]} ${dt.getDate()}
-    ${dt.getFullYear()}
+    ${months[dt.getMonth()]} ${dt.getDate()}${suffix} ${dt.getFullYear()}
   `;
 }
 

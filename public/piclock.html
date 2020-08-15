@@ -21,10 +21,11 @@
     @keyframes fade { 0% { opacity:0; } 100% { opacity:1; } }
     @keyframes scroll { from { transform: translateY(0vh) } to { transform: translateY(calc(-1 * 7.0rem)) } }
     html { font-size: calc(100vw / 25); font-family: "Lato", "Segoe UI", "Roboto", sans-serif; font-variant: small-caps; }
-    body { width: 100vw; height: 100vh; background: black; --size: 150px; overflow: hidden; color: white; }
+    body { width: 100vw; height: 100vh; background: black; --size: 150px; color: white; -ms-overflow-style: none; scrollbar-width: none; }
+    body::-webkit-scrollbar { display: none; }
     .general { justify-content: center; text-align: center; font-size: 0.4rem; display: flex; line-height-step: 0.5rem; animation: fade ease 5s; }
     .astronomy { padding: 0.4rem 0.6rem 0 0.6rem; font-size: 0.6rem; animation: fade ease 7s;}
-    .date { margin-top: 0.4rem; font-size: 1.9rem; font-weight: bolder; text-align: center; animation: fade ease 3s; }
+    .date { margin-top: 0.4rem; font-size: 1.7rem; font-weight: bolder; text-align: center; animation: fade ease 3s; }
     .clock { height: 6.0rem ; color: white; font-size: 4.0rem; line-height: 6.0rem; display: flex; position: relative; overflow: hidden; min-width: fit-content; justify-content: center; animation: fade ease 1s; }
     .clock::before { content: ''; width: 100vw; height: 2.0rem; background: linear-gradient(to bottom, transparent, black); position: absolute; top: 4.0rem; z-index: 2; }
     .clock::after { content: ''; width: 100vw; height: 2.0rem; background: linear-gradient(to top, transparent, black); position: absolute; z-index: 2; }
