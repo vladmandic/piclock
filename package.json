@@ -27,15 +27,15 @@
   },
   "homepage": "https://github.com/vladmandic/piclock#readme",
   "dependencies": {
-    "@vladmandic/pilogger": "^0.1.6",
+    "@vladmandic/pilogger": "^0.1.9",
     "maxmind": "^4.1.4",
     "superagent": "^5.3.1",
     "useragent": "^2.3.0"
   },
   "devDependencies": {
-    "eslint": "^7.6.0",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-html": "^6.0.3",
-    "eslint-config-airbnb-base": "^14.2.0"
+    "eslint-plugin-import": "^2.22.0"
   }
 }

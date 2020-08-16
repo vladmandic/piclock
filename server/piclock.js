@@ -92,10 +92,12 @@ async function request(req, res) {
 }
 
 async function main() {
-  const node = JSON.parse(fs.readFileSync('./package.json'));
-  log.logFile(options.log);
-  log.info(node.name, 'version', node.version);
-  log.info('User:', os.userInfo().username, 'Platform:', process.platform, 'Arch:', process.arch, 'Node:', process.version);
+  // const node = JSON.parse(fs.readFileSync('./package.json'));
+  log.configure({ logFile: options.log });
+  log.header();
+  // log.logFile(options.log);
+  // log.info(node.name, 'version', node.version);
+  // log.info('User:', os.userInfo().username, 'Platform:', process.platform, 'Arch:', process.arch, 'Node:', process.version);
   const server = http.createServer(request);
   server.on('listening', () => log.state('Server listening:', options.port));
   server.listen(options.port);
