@@ -109,10 +109,15 @@ async function updateDate() {
   const dt = new Date();
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  let suffix = '<sup>th</sup>';
-  if (dt.getDate() === 1) suffix = '<sup>st</sup>';
-  else if (dt.getDate() === 2) suffix = '<sup>nd</sup>';
-  else if (dt.getDate() === 3) suffix = '<sup>rd</sup>';
+  let suffix;
+  switch (dt.getDate()) {
+    case 1:
+    case 31: suffix = '<sup>st</sup>'; break;
+    case 2:
+    case 22: suffix = '<sup>nd</sup>'; break;
+    case 3: suffix = '<sup>rd</sup>'; break;
+    default: suffix = '<sup>th</sup>';
+  }
   document.getElementById('date').innerHTML = `
     ${days[dt.getDay()]}, &nbsp
     ${months[dt.getMonth()]} ${dt.getDate()}${suffix} ${dt.getFullYear()}
