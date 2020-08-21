@@ -130,7 +130,7 @@ function dateTime() {
   updateTime();
   updateDate();
   setInterval(updateTime, 1000);
-  setTimeout(updateDate, 5 * 60 * 1000);
+  setInterval(updateDate, 5 * 60 * 1000);
 }
 
 async function main() {
