@@ -45,7 +45,8 @@ async function lookupIP() {
   document.getElementById('div-geoip').innerHTML = `GeoIP: ${data.country}/${data.city} &nbsp | &nbsp Lat ${Math.round(100 * data.lat) / 100}° Lon ${Math.round(100 * data.lon) / 100}° ~${Math.round(data.accuracy)}km`;
   document.getElementById('div-asn').innerHTML = `ASN: ${data.asn || 'unknown provider'}`;
   document.getElementById('div-agent').innerHTML = `Agent: ${data.agent} &nbsp | &nbsp Device: ${data.device}`;
-  if (data.address) document.getElementById('div-addressIP').innerHTML = `IP Address: ${data.address.formattedAddress || 'unknown'} &nbsp | &nbsp Area: ${data.address.locality || 'unknown'}`;
+  const address = data.address ? JSON.parse(decodeURI(data.address)) : { formattedAddress: 'unknown', locality: 'unknown' };
+  document.getElementById('div-addressIP').innerHTML = `IP Address: ${address.formattedAddress} &nbsp | &nbsp Area: ${address.locality}`;
 }
 
 async function lookupGPS() {
@@ -71,7 +72,7 @@ async function lookupGPS() {
 async function lookupConn() {
   const conn = navigator ? (navigator.connection || navigator.mozConnection || navigator.webkitConnection || {}) : null;
   // eslint-disable-next-line no-console
-  console.log('LookupConn', conn);
+  console.log('LookupConn', conn || 'unknown');
   if (!conn) return;
   document.getElementById('div-connection').innerHTML = ((conn.type && conn.type !== 'unknown') ? `Connection: ${conn.type} | ` : '') + (conn.downlink ? `Autodetected speed: ${conn.downlink} Mbps` : '');
 }

@@ -38,7 +38,8 @@ async function geoDecode(lat, lon) {
     const res = await superagent.get(`https://dev.virtualearth.net/REST/v1/Locations/${lat},${lon}?key=${options.bingKey}`);
     const json = JSON.parse(res.text);
     const addr = (json && json.resourceSets && json.resourceSets[0].resources) ? json.resourceSets[0].resources[0].address : null;
-    return addr;
+    const encoded = encodeURI(JSON.stringify(addr));
+    return encoded;
   } catch (err) {
     log.warn(`Maps geodecode: ${err}`);
     return null;
