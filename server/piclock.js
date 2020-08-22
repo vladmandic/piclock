@@ -47,7 +47,8 @@ async function geoDecode(lat, lon) {
 }
 
 async function api(req, res) {
-  const ip = (req.headers['forwarded'] || '').match(/for="\[(.*)\]:/)[1] || req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
+  const forwarded = (req.headers['forwarded'] || '').match(/for="\[(.*)\]:/);
+  const ip = (Array.isArray(forwarded) ? forwarded[1] : null) || req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
   const data = await geoip.get(ip);
   const agent = (req.headers['user-agent'] || '').replace('(KHTML, like Gecko)', '').replace('Mozilla/5.0', '').replace('/  /g', ' ');
   const device = agent.match(/\((.*)\)/);
@@ -86,7 +87,8 @@ async function request(req, res) {
     });
     res.end(data); // , options.brotli ? 'binary' : 'utf-8');
   }
-  const ip = (req.headers['forwarded'] || '').match(/for="\[(.*)\]:/)[1] || req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
+  const forwarded = (req.headers['forwarded'] || '').match(/for="\[(.*)\]:/);
+  const ip = (Array.isArray(forwarded) ? forwarded[1] : null) || req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
   log.data(`${req.method}/${req.httpVersion}`, res.statusCode, contentType, data.length || stat.size, `${req.headers['host']}${req.url}`, ip);
   res.end();
 }
