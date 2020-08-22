@@ -66,7 +66,8 @@ async function lookupGPS() {
   // eslint-disable-next-line no-console
   console.log('LookupGPS', gps, data);
   if (data && data.lat && data.lon) printAstronomy(data.lat, data.lon);
-  if (data.address) document.getElementById('div-addressGPS').innerHTML = `GPS Address: ${data.address.formattedAddress || 'unknown'}<br>Area: ${data.address.locality || 'unknown'}`;
+  const address = data.address ? JSON.parse(decodeURI(data.address)) : { formattedAddress: 'unknown', locality: 'unknown' };
+  document.getElementById('div-addressGPS').innerHTML = `GPS Address: ${address.formattedAddress || 'unknown'}<br>Area: ${address.locality || 'unknown'}`;
 }
 
 async function lookupConn() {
