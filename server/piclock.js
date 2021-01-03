@@ -5,7 +5,7 @@ const superagent = require('superagent');
 const log = require('@vladmandic/pilogger');
 const geoip = require('./geoip.js');
 
-const secrets = fs.existsSync('./secrets.json') ? JSON.parse(fs.readFileSync('./secrets.json')) : { };
+const secrets = fs.existsSync('./secrets.json') ? JSON.parse(fs.readFileSync('./secrets.json').toString()) : { };
 const options = {
   root: './public',
   default: 'piclock.html',

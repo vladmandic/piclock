@@ -1,3 +1,4 @@
+// @ts-nocheck
 /* global SunCalc */
 
 async function printAstronomy(lat, lon) {

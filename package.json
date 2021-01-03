@@ -28,13 +28,13 @@
   "homepage": "https://github.com/vladmandic/piclock#readme",
   "sideEffects": false,
   "dependencies": {
-    "@vladmandic/pilogger": "^0.2.10",
+    "@vladmandic/pilogger": "^0.2.11",
     "maxmind": "^4.3.1",
     "superagent": "^6.1.0",
     "useragent": "^2.3.0"
   },
   "devDependencies": {
-    "eslint": "^7.15.0",
+    "eslint": "^7.17.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-html": "^6.1.1",
     "eslint-plugin-import": "^2.22.1"
