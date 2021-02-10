@@ -15,10 +15,10 @@ const options = {
   bingKey: secrets.bingKey,
 };
 const mime = {
-  '.html': 'text/html',
-  '.js': 'text/javascript',
-  '.css': 'text/css',
-  '.json': 'application/json',
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
   '.jpg': 'image/jpg',
   '.gif': 'image/gif',
@@ -26,10 +26,11 @@ const mime = {
   '.svg': 'image/svg+xml',
   '.wav': 'audio/wav',
   '.mp4': 'video/mp4',
-  '.woff': 'application/font-woff',
-  '.ttf': 'application/font-ttf',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2',
+  '.ttf': 'font/ttf',
   '.eot': 'application/vnd.ms-fontobject',
-  '.otf': 'application/font-otf',
+  '.otf': 'font/otf',
   '.wasm': 'application/wasm',
 };
 
@@ -58,7 +59,7 @@ async function api(req, res) {
   // if (data.address?.intersection) delete data.address.intersection;
   const json = JSON.stringify(data);
   res.writeHead(200, {
-    'Content-Type': 'application/json', 'Content-Length': json.length, 'Cache-Control': 'no-cache', 'X-Powered-By': `NodeJS/${process.version}`,
+    'Content-Type': 'application/json; charset=utf-8', 'Content-Length': json.length, 'Cache-Control': 'no-cache',
   });
   const precise = (req.headers.lat !== undefined) && (req.headers.lon !== undefined);
   log.data(`API ${req.url}`, precise, json.length, json);
@@ -83,7 +84,7 @@ async function request(req, res) {
     data = fs.readFileSync(file);
     const cache = contentType.startsWith('text/') ? 'no-cache' : `max-age=${options.cache}`;
     res.writeHead(200, {
-      'Content-Language': 'en', 'Content-Type': contentType, 'Content-Encoding': (options.brotli ? 'br' : ''), 'Content-Length': data.length, 'Last-Modified': stat.mtime, 'Cache-Control': cache, 'X-Powered-By': `NodeJS/${process.version}`,
+      'Content-Language': 'en', 'Content-Type': contentType, 'Content-Encoding': (options.brotli ? 'br' : ''), 'Content-Length': data.length, 'Last-Modified': stat.mtime, 'Cache-Control': cache,
     });
     res.end(data); // , options.brotli ? 'binary' : 'utf-8');
   }
