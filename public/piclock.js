@@ -132,17 +132,17 @@ function dateTime() {
   console.log('initDateTime', new Date());
   updateTime();
   updateDate();
-  setInterval(updateTime, 1000);
-  setInterval(updateDate, 5 * 60 * 1000);
+  lookupIP();
+  lookupConn();
+  setInterval(updateTime, 1000); // second
+  setInterval(updateDate, 5 * 60 * 1000); // 5 min
+  setInterval(lookupIP, 60 * 60 * 1000); // 1 hour
+  setInterval(lookupConn, 12 * 60 * 60 * 1000); // 12 hours
 }
 
 async function main() {
   dateTime();
-  lookupIP();
-  lookupConn();
-  document.addEventListener('click', () => {
-    lookupGPS();
-  });
+  document.addEventListener('click', lookupGPS);
   document.addEventListener('mousemove', (event) => {
     const percX = Math.round(100 * event.pageX / window.innerWidth);
     const percY = Math.round(100 * event.pageY / window.innerHeight);
@@ -150,4 +150,4 @@ async function main() {
   });
 }
 
-window.addEventListener('load', () => main());
+window.addEventListener('load', main);
