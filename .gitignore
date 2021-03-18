@@ -1,3 +1,4 @@
 node_modules
 secrets.json
 piclock.log
+pnpm-lock.yaml

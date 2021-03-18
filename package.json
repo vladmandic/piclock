@@ -34,9 +34,9 @@
     "useragent": "^2.3.0"
   },
   "devDependencies": {
-    "eslint": "^7.19.0",
+    "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-html": "^6.1.1",
+    "eslint-plugin-html": "^6.1.2",
     "eslint-plugin-import": "^2.22.1"
   }
 }
