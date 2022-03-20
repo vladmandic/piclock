@@ -1,6 +1,6 @@
 {
   "name": "@vladmandic/piclock",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "just a clock",
   "main": "piclock.js",
   "engines": {
