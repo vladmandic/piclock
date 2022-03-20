@@ -6,8 +6,8 @@ let geoCity;
 let geoASN;
 
 const db = {
-  city: '../pidash/geoip/GeoLite2-City.mmdb',
-  asn: '../pidash/geoip/GeoLite2-ASN.mmdb',
+  city: '../piproxy/geoip/GeoLite2-City.mmdb',
+  asn: '../piproxy/geoip/GeoLite2-ASN.mmdb',
 };
 
 async function init() {
@@ -64,8 +64,9 @@ async function get(addr = '127.0.0.1') {
   // try lookup of public ip
   if (loc.country === '') {
     try {
-      const external = await superagent.get('http://ipv4bot.whatismyipaddress.com/');
-      const ext = external.text.trim();
+      const data = await superagent.get('https://api.ipify.org?format=json');
+      const json = JSON.parse(data.text);
+      const ext = json.ip;
       const geo = geoCity.get(ext);
       const asn = geoASN.get(ext);
       loc = {

@@ -62,7 +62,7 @@ async function api(req, res) {
     'Content-Type': 'application/json; charset=utf-8', 'Content-Length': json.length, 'Cache-Control': 'no-cache',
   });
   const precise = (req.headers.lat !== undefined) && (req.headers.lon !== undefined);
-  log.data(`API ${req.url}`, precise, json.length, json);
+  log.data(`API ${req.url} precision: ${precise ? 'high' : 'low'}`, json);
   res.end(json, 'utf-8');
 }
 
