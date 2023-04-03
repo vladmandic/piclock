@@ -10,7 +10,7 @@ const options = {
   root: './public',
   default: 'piclock.html',
   log: './piclock.log',
-  port: 10020,
+  port: 10070,
   cache: 60 * 60 * 24 * 30 * 365, // 1 year
   bingKey: secrets.bingKey,
 };
