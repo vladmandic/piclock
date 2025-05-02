@@ -143,11 +143,13 @@ function dateTime() {
 async function main() {
   dateTime();
   document.addEventListener('click', lookupGPS);
+  /*
   document.addEventListener('mousemove', (event) => {
     const percX = Math.round(100 * event.pageX / window.innerWidth);
     const percY = Math.round(100 * event.pageY / window.innerHeight);
     document.body.style.background = `radial-gradient(at ${percX}% ${percY}%, #222222 0, black 50%, black 100%)`;
   });
+  */
 }
 
 window.addEventListener('load', main);
