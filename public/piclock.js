@@ -133,7 +133,7 @@ function dateTime() {
   updateTime();
   updateDate();
   lookupIP();
-  lookupConn();
+  // lookupConn(); // disabled as irrelevant
   setInterval(updateTime, 1000); // second
   setInterval(updateDate, 5 * 60 * 1000); // 5 min
   setInterval(lookupIP, 60 * 60 * 1000); // 1 hour
